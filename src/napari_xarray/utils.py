@@ -4,6 +4,44 @@ import xarray as xr
 import numpy as np
 
 def get_scale_from_coords(da: xr.DataArray, dims: list[str]) -> tuple[float, ...]:
+    """Extract scale values from xarray coordinates for napari visualization.
+    
+    This function calculates the physical spacing between data points along
+    specified dimensions by analyzing the coordinate values. For scalar coordinates,
+    it returns the coordinate value directly. For array coordinates, it computes
+    the mean difference between consecutive coordinate values.
+    
+    Parameters
+    ----------
+    da : xr.DataArray
+        The input xarray DataArray containing coordinate information.
+    dims : list[str]
+        List of dimension names to extract scale values for. These should
+        correspond to spatial dimensions (e.g., ['Z', 'Y', 'X']).
+    
+    Returns
+    -------
+    tuple[float, ...]
+        Tuple of scale values corresponding to the input dimensions.
+        Each value represents the physical spacing per pixel/voxel
+        along that dimension.
+    
+    Examples
+    --------
+    >>> import xarray as xr
+    >>> import numpy as np
+    >>> data = xr.DataArray(
+    ...     np.random.rand(10, 20, 30),
+    ...     dims=['Z', 'Y', 'X'],
+    ...     coords={
+    ...         'Z': np.arange(10) * 0.5,  # 0.5 μm per z-slice
+    ...         'Y': np.arange(20) * 0.2,  # 0.2 μm per pixel
+    ...         'X': np.arange(30) * 0.2,  # 0.2 μm per pixel
+    ...     }
+    ... )
+    >>> get_scale_from_coords(data, ['Z', 'Y', 'X'])
+    (0.5, 0.2, 0.2)
+    """
     scale = []
     for dim in dims:
         # get scalar value if 0D array
