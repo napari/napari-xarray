@@ -42,9 +42,7 @@ def get_layerdatatuple_from_xarray(
     tuple
         A LayerDataTuple compatible with napari.
     """
-
-    label = str(da.coords[dim].values.item())
-
+    
     if "colormaps" not in da.attrs or label not in da.attrs["colormaps"]:
         raise ValueError(f"Colormap for label '{label}' not found in DataArray attributes.")
 
@@ -52,7 +50,7 @@ def get_layerdatatuple_from_xarray(
         raise ValueError(f"Contrast limits for label '{label}' not found in DataArray attributes.")
 
     # Determine spatial dimensions (excluding the sliced dimension)
-    spatial_dims = [d for d in da.dims if d != dim]
+    spatial_dims = [str(d) for d in da.dims if d != dim]
     
     scale = get_scale_from_coords(da, dims=spatial_dims)
 
