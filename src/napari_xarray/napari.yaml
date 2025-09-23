@@ -6,3 +6,11 @@ visibility: public
 # categories: []
 contributions:
   commands:
+    - id: napari-xarray.cells3d
+      python_name: napari_xarray._sample_data:cells3d
+      title: Load example xarray 3D cells dataset
+      
+  sample_data:
+    - command: napari-xarray.cells3d
+      display_name: xarray cells3d
+      key: unique_id.0
