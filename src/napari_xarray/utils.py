@@ -19,8 +19,8 @@ def get_layerdatatuple_from_xarray(
     da: "xr.DataArray",
     dim: str,
     label: str,
-    blending: str | None = None,
     layer_type: str = "image",
+    **kwargs,
 ) -> tuple:
     """Convert a DataArray slice to a napari LayerDataTuple.
 
@@ -32,10 +32,11 @@ def get_layerdatatuple_from_xarray(
         The dimension to slice on (e.g., 'C' for channels).
     label : str
         The specific label in the dimension to select (e.g., 'membrane').
-    blending : str | None, optional
-        The blending mode for the layer (e.g., 'additive'), by default None.
     layer_type : str, optional
         The type of napari layer (default is 'image').
+    **kwargs
+        Additional keyword arguments to pass to the napari layer
+        (e.g., blending='additive', opacity=0.8, visible=False, etc.).
 
     Returns
     -------
@@ -48,12 +49,15 @@ def get_layerdatatuple_from_xarray(
     
     scale = get_scale_from_coords(da, dims=spatial_dims)
 
-    layer_dict = {
+    # Start with base metadata from xarray attributes
+    metadata = {
         "name": label,
         "colormap": da.attrs.get("colormaps", {}).get(label),
         "contrast_limits": da.attrs.get("contrast_limits", {}).get(label),
         "scale": scale,
-        "blending": blending,
     }
+    
+    # Add any additional kwargs (this will override base metadata if there are conflicts)
+    metadata.update(kwargs)
 
-    return (da.sel({dim: label}).data, layer_dict, layer_type)
+    return (da.sel({dim: label}).data, metadata, layer_type)
