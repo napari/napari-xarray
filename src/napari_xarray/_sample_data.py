@@ -22,12 +22,11 @@ def cells3d() -> list[tuple]:
         LayerDataTuple suitable for direct use in napari.
     """
     # Physical scaling parameters
-    Z_SCALE = 0.29  # μm per z-slice
-    Y_SCALE = 0.26  # μm per pixel
-    X_SCALE = 0.22  # μm per pixel
+    PIXEL_SCALE = 0.26  # μm per slice/pixel
     
     # Load the cells3d dataset from scikit-image
     raw_data = data.cells3d()
+    print(raw_data.shape)
     
     # Create the xarray with rich metadata
     cells3d_xarray = xr.DataArray(
@@ -35,10 +34,10 @@ def cells3d() -> list[tuple]:
         name='cells3d',
         dims=['Z', 'C', 'Y', 'X'],
         coords={
-            'Z': np.arange(raw_data.shape[0]) * Z_SCALE,  # scaled z coordinates
+            'Z': np.arange(raw_data.shape[0]) * PIXEL_SCALE,  # scaled z coordinates
             'C': ['membrane', 'nuclei'],  # channel names
-            'Y': np.arange(raw_data.shape[2]) * Y_SCALE,  # scaled y coordinates
-            'X': np.arange(raw_data.shape[3]) * X_SCALE,  # scaled x coordinates
+            'Y': np.arange(raw_data.shape[2]) * PIXEL_SCALE,  # scaled y coordinates
+            'X': np.arange(raw_data.shape[3]) * PIXEL_SCALE,  # scaled x coordinates
         },
         attrs={
             'scale_units': {
