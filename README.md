@@ -11,6 +11,8 @@
 
 A plugin for xarray support in napari
 
+ARCHIVED: Superseded by work directly contributed to napari now; see [initial work](https://github.com/napari/napari/pull/9316).
+
 ----------------------------------
 
 This [napari] plugin was generated with [copier] using the [napari-plugin-template].
